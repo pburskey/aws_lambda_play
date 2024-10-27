@@ -1,0 +1,2 @@
+#generate sample event payloads
+sam local generate-event apigateway aws-proxy

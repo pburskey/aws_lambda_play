@@ -2,27 +2,66 @@ AWSTemplateFormatVersion: 2010-09-09
 Transform: AWS::Serverless-2016-10-31
 Description: guid
 
-Resources:
+Globals:
+  Function:
+    Runtime: java17
+    MemorySize: 512
+    Timeout: 3
+    Environment:
+      Variables:
+        PROPERTY_TABLE: !Ref PropertyTable
 
-  HelloWorldLambda:
+
+Resources:
+  PropertyTable:
+    Type: AWS::Serverless::SimpleTable
+    Properties:
+      PrimaryKey:
+        Name: id
+        Type: String
+
+
+
+  PropertySaveLambda:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: .
-      Description: ''
-      MemorySize: 512
-      Timeout: 3
-      Handler: com.burskey.Handler::handle
-      Runtime: java17
-      Architectures:
-        - x86_64
-      EphemeralStorage:
-        Size: 512
-      Environment:
-        Variables:
-          Something_Important: abc123
-      EventInvokeConfig:
-        MaximumEventAgeInSeconds: 21600
-        MaximumRetryAttempts: 2
-      FunctionUrlConfig:
-        AuthType: NONE
-        InvokeMode: BUFFERED
+      CodeUri: target/lambda.zip
+      FunctionName: PropertySaveLambda
+      Handler: com.burskey.property.api.Save::handleRequest
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref PropertyTable
+      Events:
+        ApiEvents:
+          Type: Api
+          Properties:
+            Path: /save
+            Method: POST
+
+  PropertyFindLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: target/lambda.zip
+      FunctionName: PropertyFindLambda
+      Handler: com.burskey.property.api.FindProperty::handleRequest
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Ref PropertyTable
+      Events:
+        ApiEvents:
+          Type: Api
+          Properties:
+            Path: /
+            Method: GET
+
+
+
+#      FunctionUrlConfig:
+#        AuthType: NONE
+#        InvokeMode: BUFFERED
+#      Policies:
+#        - DynamoDBCrudPolicy:
+#          TableName: !Ref GuidTable
+#
+#  GuidTable:
+#    Type: AWS::Serverless::SimpleTable

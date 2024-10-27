@@ -18,19 +18,36 @@
   <build>
     <plugins>
       <plugin>
-        <artifactId>maven-shade-plugin</artifactId>
-        <version>3.2.1</version>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <version>3.1.1</version>
         <executions>
           <execution>
             <phase>package</phase>
             <goals>
-              <goal>shade</goal>
+              <goal>single</goal>
             </goals>
           </execution>
         </executions>
         <configuration>
+          <appendAssemblyId>false</appendAssemblyId>
+          <descriptors>
+            <descriptor>src/assembly/lambda-zip.xml</descriptor>
+          </descriptors>
           <finalName>lambda</finalName>
         </configuration>
+      </plugin>
+      <plugin>
+        <groupId>io.github.zlika</groupId>
+        <artifactId>reproducible-build-maven-plugin</artifactId>
+        <version>0.10</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>strip-jar</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>
@@ -41,6 +58,19 @@
       <groupId>com.amazonaws</groupId>
       <artifactId>aws-lambda-java-core</artifactId>
       <version>1.2.3</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.amazonaws</groupId>
+      <artifactId>aws-lambda-java-events</artifactId>
+      <version>3.12.0</version>
+    </dependency>
+
+
+    <dependency>
+      <groupId>com.amazonaws</groupId>
+      <artifactId>aws-java-sdk-dynamodb</artifactId>
+      <version>1.12.765</version>
     </dependency>
   </dependencies>
 
