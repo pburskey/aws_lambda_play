@@ -6,18 +6,11 @@ import com.amazonaws.services.dynamodbv2.document.DynamoDB;
 import com.amazonaws.services.dynamodbv2.document.Item;
 import com.amazonaws.services.dynamodbv2.document.Table;
 import com.amazonaws.services.dynamodbv2.document.spec.GetItemSpec;
-import com.amazonaws.services.dynamodbv2.model.PutItemRequest;
-import com.amazonaws.services.dynamodbv2.model.ScanRequest;
-import com.amazonaws.services.dynamodbv2.model.ScanResult;
 import com.burskey.property.domain.Property;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class Dynamo {
-
 
 
     AmazonDynamoDB client = AmazonDynamoDBClientBuilder.standard().build();
@@ -42,15 +35,14 @@ public class Dynamo {
 //    }
 
     public Property save(Property aProperty) {
-           final Item item = new Item()
-                    .withPrimaryKey("name", aProperty.getName())
-                    .withPrimaryKey("category", aProperty.getName())
-                    .withString("description", aProperty.getName())
-                    .withString("value", aProperty.getName());
+        final Item item = new Item()
+                .withPrimaryKey("name", aProperty.getName())
+                .withPrimaryKey("category", aProperty.getName())
+                .withString("description", aProperty.getName())
+                .withString("value", aProperty.getName());
 
-            final Table table = this.dynamoDB.getTable(this.tableName);
-            table.putItem(item);
-
+        final Table table = this.dynamoDB.getTable(this.tableName);
+        table.putItem(item);
 
 
         return aProperty;
@@ -67,10 +59,8 @@ public class Dynamo {
         Property aProperty = null;
         if (item == null) {
             Map<String, Object> aMap = item.asMap();
-            aProperty = new Property( item.get("name").toString(), item.get("description").toString(), item.get("value").toString(), item.get("category").toString());
+            aProperty = new Property(item.get("id").toString(), item.get("name").toString(), item.get("description").toString(), item.get("value").toString(), item.get("category").toString());
         }
-
-
 
 
         return aProperty;
