@@ -1,19 +1,68 @@
 package com.burskey.property.api;
 
 import com.amazonaws.services.lambda.runtime.Context;
+import com.amazonaws.services.lambda.runtime.LambdaLogger;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
+import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
+import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
 import com.burskey.property.dao.Dynamo;
+import com.burskey.property.domain.Property;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.http.HttpStatus;
 
-public class Save implements RequestHandler<APIGateWayRequest, APIGatewayResponse> {
+import java.util.HashMap;
+import java.util.Map;
 
-    public static final String ENV_PROPERTY_TABLE= "PROPERTY_TABLE";
+public class Save {
+
+    public static final String ENV_PROPERTY_TABLE = "PROPERTY_TABLE";
     private final Dynamo dynamo = new Dynamo(getFromEnvironment(ENV_PROPERTY_TABLE));
 
-    @Override
-    public APIGatewayResponse handleRequest(APIGateWayRequest o, Context context) {
 
-        return new APIGatewayResponse(200, "trying to save....");
+//    public static void main(String[] args) throws JsonProcessingException {
+//        Property property = null;
+//        ObjectMapper mapper = new ObjectMapper();
+//        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+//        mapper.configure(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES, false);
+//        String json = "{\n" +
+//                "  \"name\": \"aName\",\n" +
+//                "  \"category\": \"aCategory\",\n" +
+//                "  \"description\": \"aDescription\",\n" +
+//                "  \"value\": \"aValue\"\n" +
+//                "}";
+//        property = mapper.readValue(json, Property.class);
+//    }
 
+
+
+    public APIGatewayProxyResponseEvent handleRequest(APIGatewayProxyRequestEvent event, Context context) {
+        LambdaLogger logger = context.getLogger();
+        logger.log("Event Details:" + event.toString());
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        mapper.configure(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES, false);
+        APIGatewayProxyResponseEvent response = new APIGatewayProxyResponseEvent();
+        response.setIsBase64Encoded(false);
+        response.setStatusCode(200);
+        try {
+            logger.log("Body: " + event.getBody());
+            Property property = mapper.readValue(event.getBody(), Property.class);
+            if (property != null) {
+                this.dynamo.save(property);
+                response.setBody(property.getId());
+            }
+
+        } catch (Exception e) {
+            logger.log(e.getMessage());
+            response.setBody(e.getMessage());
+            response.setStatusCode(HttpStatus.SC_INTERNAL_SERVER_ERROR);
+        }
+
+
+
+        return response;
     }
 
     protected String getFromEnvironment(String key) {

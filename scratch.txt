@@ -4,3 +4,36 @@ sam local generate-event apigateway aws-proxy
 
 
 curl --request GET 'https://4khaxvraswvqtza4qdasjnzqoi0hkdel.lambda-url.us-east-2.on.aws/find?category=cat&name=aname'
+
+
+curl -X POST -H "Content-Type: application/json" -d @aws_invoke_payload.json https://tacsxpmd5m.execute-api.us-east-2.amazonaws.com/Prod/save
+curl -X GET https://tacsxpmd5m.execute-api.us-east-2.amazonaws.com/Prod/fb66de18-9c5d-4965-ae82-962a93157646
+
+
+aws configure set cli-binary-format raw-in-base64-out
+
+
+
+
+// get YOUR-REST-API-ID            e.g.,    0w12zl28di
+aws apigateway get-rest-apis | jq -r '.items[] | [.id, .name] | @tsv'
+
+
+// get REGION  using Lambda_function_name e.g.,      ap-east-1
+aws lambda get-function-configuration --function-name YOUR_LAMBDA_FUNCTION_NAME | jq '.FunctionArn | split(":")[3]'
+
+// get STAGE e.g.,         dev
+aws apigateway get-stages --rest-api-id YOUR-REST-API-ID | jq -r '.item[] | [.stageName] | @tsv'
+
+
+// get RESOURCE e.g.,       users
+aws apigateway get-resources --rest-api-id YOUR-REST-API-ID | jq '.items[] | [.id, .path]'
+
+
+ // finally put your pieces in this way
+
+ https://0w12zl28di.execute-api.ap-east-1.amazonaws.com/dev/users
+
+
+
+  https://1984c2qa61.execute-api.us-east-2.amazonaws.com/Prod/save

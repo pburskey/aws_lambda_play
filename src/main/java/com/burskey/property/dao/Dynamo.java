@@ -35,36 +35,49 @@ public class Dynamo {
 //    }
 
     public Property save(Property aProperty) {
-        final Item item = new Item()
-                .withPrimaryKey("name", aProperty.getName())
-                .withPrimaryKey("category", aProperty.getName())
-                .withString("description", aProperty.getName())
-                .withString("value", aProperty.getName());
+        if (aProperty != null){
+            if (aProperty.getId() == null){
+                aProperty.setId(java.util.UUID.randomUUID().toString());
 
-        final Table table = this.dynamoDB.getTable(this.tableName);
-        table.putItem(item);
+                final Item item = new Item()
+                        .withPrimaryKey("id", aProperty.getId())
+                        .withString("name", aProperty.getName())
+                        .withString("category", aProperty.getCategory())
+                        .withString("description", aProperty.getDescription())
+                        .withString("value", aProperty.getValue());
+
+                final Table table = this.dynamoDB.getTable(this.tableName);
+                table.putItem(item);
+            }
+
+        }
+
 
 
         return aProperty;
     }
 
 
-    public Property find(String name, String category) {
+
+    public Property find(String id) {
 
         GetItemSpec spec = new GetItemSpec();
-        spec.withPrimaryKey("name", name).withPrimaryKey("category", category);
+        spec.withPrimaryKey("id", id);
         final Table table = this.dynamoDB.getTable(this.tableName);
 
         Item item = table.getItem(spec);
         Property aProperty = null;
-        if (item == null) {
+        if (item != null) {
             Map<String, Object> aMap = item.asMap();
-            aProperty = new Property(item.get("id").toString(), item.get("name").toString(), item.get("description").toString(), item.get("value").toString(), item.get("category").toString());
+            aProperty = new Property();
+            aProperty.setId(item.get("id").toString());
+            aProperty.setName(item.get("name").toString());
+            aProperty.setCategory(item.get("category").toString());
+            aProperty.setDescription(item.get("description").toString());
+            aProperty.setValue(item.get("value").toString());
         }
 
 
         return aProperty;
     }
-
-
 }

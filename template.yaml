@@ -2,6 +2,7 @@ AWSTemplateFormatVersion: 2010-09-09
 Transform: AWS::Serverless-2016-10-31
 Description: PropertyConfiguration
 
+
 Globals:
   Function:
     Runtime: java17
@@ -10,7 +11,6 @@ Globals:
     Environment:
       Variables:
         PROPERTY_TABLE: !Ref PropertyTable
-
 
 Resources:
   PropertyTable:
@@ -38,37 +38,23 @@ Resources:
             Path: /save
             Method: POST
 
-  PropertyFindLambda:
+  PropertyFindByIDLambda:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: target/lambda.zip
-      FunctionName: PropertyFindLambda
-      Handler: com.burskey.property.api.FindProperty::handleRequest
+      FunctionName: PropertyFindByIDLambda
+      Handler: com.burskey.property.api.GetByID::handleRequest
       Policies:
         - DynamoDBReadPolicy:
             TableName: !Ref PropertyTable
       Events:
-        ApiEvents:
+        ApiEvent:
           Type: Api
           Properties:
-            Path: /find
-            Method: GET
+            Path: /{id}
+            Method: get
             RequestParameters:
-              - method.request.querystring.name:
-                  Required: true
-                  Caching: false
-              - method.request.querystring.category:
+              - method.request.path.id:
                   Required: true
                   Caching: false
 
-
-
-#      FunctionUrlConfig:
-#        AuthType: NONE
-#        InvokeMode: BUFFERED
-#      Policies:
-#        - DynamoDBCrudPolicy:
-#          TableName: !Ref GuidTable
-#
-#  GuidTable:
-#    Type: AWS::Serverless::SimpleTable

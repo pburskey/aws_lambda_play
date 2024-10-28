@@ -1,23 +1,25 @@
 package com.burskey.property.domain;
 
 public class Property {
-    private String id;
-    private String name;
-    private String description;
-    private String value;
-    private String category;
+    public String id;
+    public String name;
+    public String description;
+    public String value;
+    public String category;
 
 
-    public Property(String id, String name, String description, String value, String category) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.value = value;
-        this.category = category;
-    }
 
-    public Property() {
-    }
+//
+//    public Property(String id, String name, String description, String value, String category) {
+//        this.id = id;
+//        this.name = name;
+//        this.description = description;
+//        this.value = value;
+//        this.category = category;
+//    }
+//
+//    public Property() {
+//    }
 
     public String getId() {
         return id;
@@ -58,4 +60,6 @@ public class Property {
     public void setCategory(String category) {
         this.category = category;
     }
+
+
 }
