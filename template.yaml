@@ -58,3 +58,25 @@ Resources:
                   Required: true
                   Caching: false
 
+  PropertyFindByNameCategory:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: target/lambda.zip
+      FunctionName: PropertyFindByNameCategory
+      Handler: com.burskey.property.api.GetByNameCategory::handleRequest
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Ref PropertyTable
+      Events:
+        ApiEvent:
+          Type: Api
+          Properties:
+            Path: /find
+            Method: get
+            RequestParameters:
+              - method.request.querystring.name:
+                  Required: false
+                  Caching: false
+              - method.request.querystring.category:
+                  Required: false
+                  Caching: false

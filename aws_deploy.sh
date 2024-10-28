@@ -10,3 +10,5 @@ sam deploy \
 
 ./aws_build_url_for_function.sh PropertyFindByIDLambda / 2>&1 | tee PropertyFindByIDLambda.txt
 ./aws_build_url_for_function.sh PropertySaveLambda /save 2>&1 | tee PropertySaveLambda.txt
+./aws_build_url_for_function.sh PropertyFindByNameCategory /find 2>&1 | tee PropertyFindByNameCategory.txt
+
