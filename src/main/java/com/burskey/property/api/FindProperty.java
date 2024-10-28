@@ -3,6 +3,9 @@ package com.burskey.property.api;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.burskey.property.dao.Dynamo;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import static com.fasterxml.jackson.databind.type.LogicalType.Map;
 
 public class FindProperty implements RequestHandler<APIGateWayRequest, APIGatewayResponse> {
 
@@ -11,9 +14,10 @@ public class FindProperty implements RequestHandler<APIGateWayRequest, APIGatewa
 
     @Override
     public APIGatewayResponse handleRequest(APIGateWayRequest request, Context context) {
+
         String name = request.queryStringParameters.get("name");
         String category = request.queryStringParameters.get("category");
-        return new APIGatewayResponse(200, "name: " + name + ", category: " + category);
+        return new APIGatewayResponse(200, "Searching For Property..... name: " + name + " category: " + category);
 
     }
 

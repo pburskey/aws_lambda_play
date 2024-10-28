@@ -51,8 +51,15 @@ Resources:
         ApiEvents:
           Type: Api
           Properties:
-            Path: /
+            Path: /find
             Method: GET
+            RequestParameters:
+              - method.request.querystring.name:
+                  Required: true
+                  Caching: false
+              - method.request.querystring.category:
+                  Required: true
+                  Caching: false
 
 
 

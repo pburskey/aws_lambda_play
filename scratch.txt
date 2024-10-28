@@ -1,2 +1,6 @@
 #generate sample event payloads
 sam local generate-event apigateway aws-proxy
+
+
+
+curl --request GET 'https://4khaxvraswvqtza4qdasjnzqoi0hkdel.lambda-url.us-east-2.on.aws/find?category=cat&name=aname'
