@@ -79,8 +79,11 @@ public class Dynamo {
                 UpdateItemRequest updateItemRequest = new UpdateItemRequest();
                 updateItemRequest.setTableName(this.tableName);
                 updateItemRequest.addKeyEntry("id", new AttributeValue().withS(aProperty.getId()));
-                updateItemRequest.withUpdateExpression("set description = '"+aProperty.getDescription()+"'");
-                updateItemRequest.withUpdateExpression("set value = '"+aProperty.getValue()+"'");
+                updateItemRequest.addExpressionAttributeValuesEntry(":description", new AttributeValue().withS(aProperty.getDescription()));
+                updateItemRequest.addExpressionAttributeValuesEntry(":value", new AttributeValue().withS(aProperty.getValue()));
+                updateItemRequest.withUpdateExpression("set #d = :description , #v = :value");
+                updateItemRequest.addExpressionAttributeNamesEntry("#v", "value");
+                updateItemRequest.addExpressionAttributeNamesEntry("#d","description");
 
                 try{
                     UpdateItemResult result = this.client.updateItem(updateItemRequest);
