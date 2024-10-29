@@ -4,8 +4,7 @@ import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
 import com.amazonaws.services.dynamodbv2.document.*;
 import com.amazonaws.services.dynamodbv2.document.spec.GetItemSpec;
-import com.amazonaws.services.dynamodbv2.model.ScanRequest;
-import com.amazonaws.services.dynamodbv2.model.ScanResult;
+import com.amazonaws.services.dynamodbv2.model.*;
 import com.burskey.property.domain.Property;
 
 import java.util.ArrayList;
@@ -76,6 +75,20 @@ public class Dynamo {
 
                 final Table table = this.dynamoDB.getTable(this.tableName);
                 table.putItem(item);
+            }else{
+                UpdateItemRequest updateItemRequest = new UpdateItemRequest();
+                updateItemRequest.setTableName(this.tableName);
+                updateItemRequest.addKeyEntry("id", new AttributeValue().withS(aProperty.getId()));
+                updateItemRequest.withUpdateExpression("set description = '"+aProperty.getDescription()+"'");
+                updateItemRequest.withUpdateExpression("set value = '"+aProperty.getValue()+"'");
+
+                try{
+                    UpdateItemResult result = this.client.updateItem(updateItemRequest);
+                } catch (Exception e) {
+                    System.err.println("Error updating item: " + e.getMessage());
+                }
+
+
             }
 
         }
