@@ -2,10 +2,11 @@ package com.burskey.property.domain;
 
 public class Property {
     public String id;
+    public String category;
     public String name;
     public String description;
     public String value;
-    public String category;
+
 
 
 

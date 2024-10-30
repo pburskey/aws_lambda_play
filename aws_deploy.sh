@@ -1,5 +1,6 @@
 rm PropertyFindByIDLambda.txt
 rm PropertySaveLambda.txt
+rm PropertyFindByNameCategory.txt
 mvn package
 
 sam deploy \
