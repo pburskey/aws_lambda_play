@@ -155,5 +155,26 @@ public class StepDefinitions {
         this.getByCategoryAndNameURI = string;
     }
 
+    @When("I bootstrap the URIs")
+    public void i_bootstrap_the_uris() {
+        assertNotNull(this.stage);
 
+        LambdaResourceLoader loader = LambdaResourceLoader.Build(this.stage);
+        this.saveURI = loader.get(LambdaResourceLoader.Thing.Save);
+        this.getByIDURI = loader.get(LambdaResourceLoader.Thing.FindByID);
+        this.getByCategoryAndNameURI = loader.get(LambdaResourceLoader.Thing.FindByCategoryAndName);
+    }
+
+    @Then("I have a save uri")
+    public void i_have_a_save_uri() {
+       assertNotNull(this.saveURI);
+    }
+    @Then("I have a find by id uri")
+    public void i_have_a_find_by_id_uri() {
+        assertNotNull(this.getByIDURI);
+    }
+    @Then("I have a find by category and name uri")
+    public void i_have_a_find_by_category_and_name_uri() {
+        assertNotNull(this.getByCategoryAndNameURI);
+    }
 }

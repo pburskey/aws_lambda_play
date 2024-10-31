@@ -4,15 +4,11 @@ import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.LambdaLogger;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
-import com.burskey.property.dao.Dynamo;
 import com.burskey.property.domain.Property;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.HttpStatus;
 
-public class GetByID  {
-
-    public static final String ENV_PROPERTY_TABLE= "PROPERTY_TABLE";
-    private final Dynamo dynamo = new Dynamo(getFromEnvironment(ENV_PROPERTY_TABLE));
+public class GetByID extends AbstractLambda {
 
 
     public APIGatewayProxyResponseEvent handleRequest(APIGatewayProxyRequestEvent event, Context context) {
@@ -44,8 +40,5 @@ public class GetByID  {
 
     }
 
-    protected String getFromEnvironment(String key) {
-        String value = System.getenv(key);
-        return value;
-    }
+
 }

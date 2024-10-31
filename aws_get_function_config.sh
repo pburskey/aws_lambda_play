@@ -1,1 +1,0 @@
-aws lambda get-function-url-config --function-name guid

@@ -1,6 +1,6 @@
-# guid
+# PropertyConfiguration
 
-Creates and deploys a "Hello World" AWS Lambda function, implemented in Java.
+Creates and deploys an AWS Lambda function, implemented in Java.
 
 ## Prerequisites
 
@@ -24,9 +24,3 @@ $ sam deploy --s3-bucket $CF_BUCKET --stack-name guid --capabilities CAPABILITY_
 
 To test:
 
-The above will create a new function in Lambda, so you can test via the Lambda web console,
-or via the CLI using `aws lambda invoke`.
-
-## More Information
-
-Please see https://github.com/symphoniacloud/sam-init-HelloWorldLambdaJava for more information.

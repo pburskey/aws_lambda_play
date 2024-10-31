@@ -4,18 +4,13 @@ import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.LambdaLogger;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
-import com.burskey.property.dao.Dynamo;
 import com.burskey.property.domain.Property;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.HttpStatus;
 
 import java.util.List;
 
-public class GetByNameCategory {
-
-    public static final String ENV_PROPERTY_TABLE= "PROPERTY_TABLE";
-    private final Dynamo dynamo = new Dynamo(getFromEnvironment(ENV_PROPERTY_TABLE));
-
+public class GetByNameCategory extends AbstractLambda {
 
     public APIGatewayProxyResponseEvent handleRequest(APIGatewayProxyRequestEvent event, Context context) {
 
@@ -34,13 +29,13 @@ public class GetByNameCategory {
                 category = event.getQueryStringParameters().get("category");
 
                 List<Property> aList = null;
-                if (name != null && category != null){
+                if (name != null && category != null) {
                     aList = dynamo.find(name, category);
-                }else if (category != null){
-                    aList = dynamo.findByCategory( category);
+                } else if (category != null) {
+                    aList = dynamo.findByCategory(category);
                 }
 
-                if (aList != null && aList.size() > 0){
+                if (aList != null && aList.size() > 0) {
                     response.setBody(new ObjectMapper().writeValueAsString(aList));
                 }
 
@@ -59,8 +54,4 @@ public class GetByNameCategory {
 
     }
 
-    protected String getFromEnvironment(String key) {
-        String value = System.getenv(key);
-        return value;
-    }
 }
